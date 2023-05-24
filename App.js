@@ -1,6 +1,7 @@
 import * as Location from "expo-location";
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
+import { Fontisto } from "@expo/vector-icons";
 import {
   StyleSheet,
   Text,
@@ -11,11 +12,21 @@ import {
 } from "react-native";
 import apiKeys from "./apiKeys";
 
+//screen width
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
+//API_KEYS
+const WEATHER_API_KEY = apiKeys.WEATHER_API_KEY;
+const GEO_API_KEY = apiKeys.GEO_API_KEY;
+
+//icons
+const icons = {
+  Clouds: "cloudy",
+  Clear: "day-sunny",
+  Rain: "rains",
+};
+
 export default function App() {
-  const WEATHER_API_KEY = apiKeys.WEATHER_API_KEY;
-  const GEO_API_KEY = apiKeys.GEO_API_KEY;
   const [city, setCity] = useState("Loading...");
   const [days, setDays] = useState([]);
   const [location, setLocation] = useState();
@@ -40,11 +51,7 @@ export default function App() {
     );
     const json = await response.json();
     const li = json.list;
-    console.log(typeof [1, 2, 3]);
-    const newli = li[0];
     setDays(li);
-    console.log(newli);
-    console.log(days);
   };
 
   useEffect(() => {
@@ -63,16 +70,32 @@ export default function App() {
         contentContainerStyle={styles.weather}
       >
         {days.length === 0 ? (
-          <View style={styles.day}>
+          <View style={styles.indicator}>
             <ActivityIndicator color="white" size="large" />
           </View>
         ) : (
           days.map((day, index) => {
-            console.log(day);
             return (
               <View key={index} style={styles.day}>
-                <Text style={styles.dayText}>{day.dt_txt}</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={styles.temp}>{day.main.temp}</Text>
+                  <Fontisto
+                    name={icons[day.weather[0].main]}
+                    size={68}
+                    color="white"
+                  />
+                </View>
                 <Text style={styles.weatherName}>{day.weather[0].main}</Text>
+                <Text style={styles.dayText}>
+                  {day.dt_txt.slice(5, 13) + "'"}
+                </Text>
               </View>
             );
           })
@@ -86,31 +109,49 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "tomato",
+    backgroundColor: "#F2BED1",
+    padding: 20,
   },
   city: {
     flex: 1,
-    backgroundColor: "yellow",
+    backgroundColor: "#F2BED1",
     justifyContent: "center",
     alignItems: "center",
+    paddingTop: 100,
+    paddingBottom: 100,
+    width: "100%",
   },
   cityName: {
-    fontSize: 68,
+    fontSize: 80,
+    color: "white",
+    fontWeight: 600,
   },
   weather: {
-    backgroundColor: "skyblue",
+    backgroundColor: "#F2BED1",
   },
-  day: {
-    width: SCREEN_WIDTH,
-    backgroundColor: "red",
+  indicator: {
+    width: SCREEN_WIDTH - 40,
+    backgroundColor: "#F2BED1",
     alignItems: "center",
     justifyContent: "center",
   },
-  dayText: {
-    fontSize: 80,
+  day: {
+    width: SCREEN_WIDTH - 40,
+    backgroundColor: "#F2BED1",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+  },
+  temp: {
+    fontSize: 100,
     fontWeight: "600",
+    color: "white",
+  },
+  dayText: {
+    fontSize: 60,
+    color: "white",
   },
   weatherName: {
     fontSize: 60,
+    color: "white",
   },
 });
