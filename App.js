@@ -9,13 +9,13 @@ import {
   Dimensions,
   ActivityIndicator,
 } from "react-native";
+import apiKeys from "./apiKeys";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function App() {
-  const WEATHER_API_KEY = "2834387742b25d5393a21e88fee8246a";
-  const GEO_API_KEY = "AIzaSyCBeW_-45ECOhQ1kucRA_yqdyKE-njE6zE";
-
+  const WEATHER_API_KEY = apiKeys.WEATHER_API_KEY;
+  const GEO_API_KEY = apiKeys.GEO_API_KEY;
   const [city, setCity] = useState("Loading...");
   const [days, setDays] = useState([]);
   const [location, setLocation] = useState();
